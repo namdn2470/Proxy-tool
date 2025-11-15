@@ -1,36 +1,48 @@
-from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QFileDialog, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QFileDialog, QHBoxLayout
 from PyQt6.QtCore import QTimer
 import os
 import subprocess
 from functools import partial
 from typing import Dict, Tuple
 
-class MiddlePanel(QVBoxLayout):
+class MiddlePanel(QWidget):
     def __init__(self, left):
         super().__init__()
         self.left = left
+        
+        # Resizable width with minimum (ensure it's always visible)
+        self.setMinimumWidth(280)
+        self.setMaximumWidth(450)
+        
+        # Main layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(10, 10, 10, 10)
+        
         self.label = QLabel("Auto Fake IP")
-        self.addWidget(self.label)
+        self.label.setStyleSheet("font-size: 14px; font-weight: bold;")
+        layout.addWidget(self.label)
 
         # Select exe
         self.select_exe_button = QPushButton("Select .exe file")
-        self.addWidget(self.select_exe_button)
+        layout.addWidget(self.select_exe_button)
 
         # Fake IP button
         self.fake_ip_button = QPushButton("Fake IP")
-        self.addWidget(self.fake_ip_button)
+        self.fake_ip_button.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold; padding: 5px;")
+        layout.addWidget(self.fake_ip_button)
 
         # Table for processes
         self.process_table = QTableWidget()
         self.process_table.setColumnCount(5)
         self.process_table.setHorizontalHeaderLabels(["PID", "File", "Proxy", "Status", "Actions"])
         self.process_table.setMinimumHeight(300)
-        self.addWidget(self.process_table)
+        layout.addWidget(self.process_table)
 
         # Logs
         self.log_area = QTextEdit()
         self.log_area.setReadOnly(True)
-        self.addWidget(self.log_area)
+        self.log_area.setMaximumHeight(150)
+        layout.addWidget(self.log_area)
 
         # Processes dict
         self.processes: Dict[int, Tuple[str, str, subprocess.Popen]] = {}

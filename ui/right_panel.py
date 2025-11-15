@@ -1,26 +1,34 @@
-from PyQt6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QLineEdit, QSpinBox, QComboBox, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QSpinBox, QComboBox, QHBoxLayout
 import requests
 
-class RightPanel(QVBoxLayout):
+class RightPanel(QWidget):
     def __init__(self, left):
         super().__init__()
         self.left = left
+        
+        # Resizable width with minimum
+        self.setMinimumWidth(220)
+        self.setMaximumWidth(350)
+        
+        # Main layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(10, 10, 10, 10)
 
         # Top row: Loại proxy cần mua + Giới thiệu
         top_row = QHBoxLayout()
         self.type_label = QLabel("<span style='color:blue;'>Loại proxy cần mua</span>")
-        self.type_label.setStyleSheet("font-size: 12px;")
+        self.type_label.setStyleSheet("font-size: 11px;")
         top_row.addWidget(self.type_label)
         self.intro_button = QPushButton("Giới thiệu")
-        self.intro_button.setStyleSheet("color: blue; background: transparent; border: none; font-size: 12px;")
+        self.intro_button.setStyleSheet("color: blue; background: transparent; border: none; font-size: 11px;")
         top_row.addWidget(self.intro_button)
         top_row.addStretch()
-        self.addLayout(top_row)
+        layout.addLayout(top_row)
 
         # Main title
         self.main_title = QLabel("Chọn loại proxy cần mua")
-        self.main_title.setStyleSheet("color: red; font-size: 18px; font-weight: bold;")
-        self.addWidget(self.main_title)
+        self.main_title.setStyleSheet("color: red; font-size: 14px; font-weight: bold;")
+        layout.addWidget(self.main_title)
 
         # Form layout
         form_row1 = QHBoxLayout()
@@ -33,7 +41,7 @@ class RightPanel(QVBoxLayout):
         self.quantity_spin.setRange(1, 100)
         form_row1.addWidget(QLabel("Số lượng"))
         form_row1.addWidget(self.quantity_spin)
-        self.addLayout(form_row1)
+        layout.addLayout(form_row1)
 
         form_row2 = QHBoxLayout()
         self.user_input = QLineEdit()
@@ -43,22 +51,25 @@ class RightPanel(QVBoxLayout):
         self.type_combo.addItems(["HTTP", "SOCKS5"])
         form_row2.addWidget(QLabel("Type"))
         form_row2.addWidget(self.type_combo)
-        self.addLayout(form_row2)
+        layout.addLayout(form_row2)
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Password")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        self.addWidget(self.password_input)
+        layout.addWidget(self.password_input)
 
         # Price label
         self.price_label = QLabel("Lựa chọn cần: 0 VNĐ")
-        self.price_label.setStyleSheet("color: green; font-size: 16px; font-weight: bold;")
-        self.addWidget(self.price_label)
+        self.price_label.setStyleSheet("color: green; font-size: 14px; font-weight: bold;")
+        layout.addWidget(self.price_label)
 
         # Buy button
         self.buy_button = QPushButton("Mua hàng")
-        self.buy_button.setStyleSheet("background: #e0e0ff; color: blue; font-weight: bold; font-size: 14px;")
-        self.addWidget(self.buy_button)
+        self.buy_button.setStyleSheet("background: #e0e0ff; color: blue; font-weight: bold; font-size: 13px;")
+        layout.addWidget(self.buy_button)
+        
+        # Add stretch to push everything to top
+        layout.addStretch()
 
         # Connect signals
         self.quantity_spin.valueChanged.connect(self.update_price)

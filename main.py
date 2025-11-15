@@ -7,3 +7,4 @@ if __name__=='__main__':
     w=FakeProxyApp()
     w.show()
     sys.exit(app.exec())
+    
